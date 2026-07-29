@@ -9,10 +9,9 @@ Hệ thống hỗ trợ:
 * Đăng ký và đăng nhập tài khoản.
 * Quản lý thư mục và tệp tin.
 * Upload và download tệp tin.
-* Chia sẻ tệp tin và thư mục cho người dùng khác.
-* Phân quyền Viewer / Editor.
-* Truyền dữ liệu qua kênh TLS sử dụng OpenSSL.
-* Lưu trữ metadata bằng PostgreSQL.
+* Chia sẻ tệp tin và thư mục.
+* Phân quyền trong chế độ chia sẻ.
+* Mã hóa kênh truyền và xác thực.
 
 ---
 
@@ -33,133 +32,21 @@ Hệ thống hỗ trợ:
 
 ---
 
-## Cài đặt cơ sở dữ liệu
-
-### Tạo database
-
-Đăng nhập PostgreSQL:
-
-```bash
-psql -U postgres
-```
-
-Tạo database:
-
-```sql
-CREATE DATABASE file_db;
-```
-
-Thoát:
-
-```sql
-\q
-```
-
-### Import schema
-
-```bash
-psql -U postgres -d file_db -f schema.sql
-```
-
-Kiểm tra:
-
-```bash
-psql -U postgres -d file_db
-```
-
----
-
-## Thiết lập TLS
-
-Hệ thống sử dụng OpenSSL và chứng chỉ được ký bởi Root CA tự tạo.
-
-### 1. Tạo Root CA
-
-Tạo khóa riêng:
-
-```bash
-openssl genrsa -out ca.key 2048
-```
-
-Tạo chứng chỉ CA:
-
-```bash
-openssl req -x509 \
-    -new \
-    -nodes \
-    -key ca.key \
-    -sha256 \
-    -days 3650 \
-    -out ca.crt
-```
-
----
-
-### 2. Tạo khóa riêng cho Server
-
-```bash
-openssl genrsa -out server.key 2048
-```
-
----
-
-### 3. Tạo Certificate Signing Request (CSR)
-
-```bash
-openssl req -new \
-    -key server.key \
-    -out server.csr
-```
-
----
-
-### 4. Ký chứng chỉ Server bằng Root CA
-
-```bash
-openssl x509 \
-    -req \
-    -in server.csr \
-    -CA ca.crt \
-    -CAkey ca.key \
-    -CAcreateserial \
-    -out server.crt \
-    -days 3650 \
-    -sha256
-```
-
-### 5. Kiểm tra chứng chỉ
-
-```bash
-openssl verify \
-    -CAfile ca.crt \
-    server.crt
-```
-
-Kết quả mong đợi:
-
-```text
-server.crt: OK
-```
-
----
-
-## Biên dịch
-
-### Server
-
-```bash
-make
-```
-
-### Client
-
-```bash
-make
-```
-
----
-
 ## Chạy chương trình
+
+### Khởi tạo
+
+Khởi tạo cơ sở dữ liệu với schema trong /server/src/database/schema.sql
+
+Thiết lập kênh truyền TLS bằng OpenSSL
+
+Tạo file môi trường .env và đặt biến kết nối Database
+
+### Biên dịch
+
+```bash
+make
+```
 
 ### Khởi động server
 
