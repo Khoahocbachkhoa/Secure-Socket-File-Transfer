@@ -2,15 +2,15 @@
 
 ## Giới thiệu
 
-Secure File Sharing System là ứng dụng chia sẻ tệp tin theo mô hình Client-Server được xây dựng bằng ngôn ngữ C.
+Secure File Sharing System là chương trình chia sẻ tệp tin được xây dựng bằng ngôn ngữ C.
 
-Hệ thống hỗ trợ:
+Chương trình hỗ trợ:
 
-* Đăng ký và đăng nhập tài khoản.
-* Quản lý thư mục và tệp tin.
-* Upload và download tệp tin.
-* Chia sẻ tệp tin và thư mục.
-* Phân quyền trong chế độ chia sẻ.
+* Đăng ký, đăng nhập tài khoản.
+* Quản lý, lưu trữ thư mục tập tin trên server.
+* Upload và download.
+* Chia sẻ tệp tin, thư mục giữa các tài khoản.
+* Phân quyền truy cập tài nguyên khi chia sẻ.
 * Mã hóa kênh truyền và xác thực.
 
 ---
@@ -36,11 +36,11 @@ Hệ thống hỗ trợ:
 
 ### Khởi tạo
 
-Khởi tạo cơ sở dữ liệu với schema trong /server/src/database/schema.sql
+Khởi tạo CSDL với schema trong /server/src/database/schema.sql
 
-Thiết lập kênh truyền TLS bằng OpenSSL
+Tạo chứng chỉ, thiết lập kênh TLS bằng OpenSSL.
 
-Tạo file môi trường .env và đặt biến kết nối Database
+Tạo kết nối server với database.
 
 ### Biên dịch
 
@@ -112,21 +112,9 @@ open-shared
 exit-shared
 ```
 
-### Hệ thống
+### Khác
 
 ```text
 help
 quit
 ```
-
----
-
-## Bảo mật
-
-Hệ thống sử dụng TLS thông qua thư viện OpenSSL.
-
-Server sử dụng chứng chỉ số được ký bởi Root CA tự tạo.
-
-Client xác thực chứng chỉ của Server trước khi thiết lập phiên làm việc.
-
-Toàn bộ dữ liệu đăng nhập, lệnh điều khiển và nội dung tệp được truyền qua kênh mã hóa TLS.
